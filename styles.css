@@ -17,7 +17,7 @@
 @keyframes tile-arrive{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:650px){.app-shell{padding:0 14px}.topbar{height:62px}.workspace{padding:8px 0 30px}.map-stage{order:initial}.island-wrap{max-height:none;margin:0 -10px}#board{width:100%;max-height:none;min-height:0}.map-toolbar{padding-top:10px;gap:12px}.generate-button{width:178px}.topbar-right{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.tile,.port{animation:none}}
-.island-wrap{touch-action:pan-y}
+.island-wrap{touch-action:pan-y pinch-zoom}
 .map-toolbar{padding-bottom:max(10px,env(safe-area-inset-bottom))}
 .generate-button{min-height:48px;touch-action:manipulation}
 .generate-button:disabled{cursor:wait;opacity:.88}
