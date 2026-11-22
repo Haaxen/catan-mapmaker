@@ -2,12 +2,12 @@ const svg = document.querySelector('#board');
 const NS = 'http://www.w3.org/2000/svg';
 const tiles = [];
 const resources = [
-  { name: 'Forest', color: '#78936f', icon: '♣', detail: 'TIMBER' },
-  { name: 'Pasture', color: '#a6b77d', icon: '♧', detail: 'WOOL' },
-  { name: 'Fields', color: '#d4bc67', icon: '✺', detail: 'GRAIN' },
-  { name: 'Hills', color: '#bd795b', icon: '▲', detail: 'BRICK' },
-  { name: 'Mountains', color: '#778a8d', icon: '◆', detail: 'ORE' },
-  { name: 'Desert', color: '#d4b889', icon: '', detail: 'DESERT' },
+  { name: 'Forest', color: '#78936f', image: 'assets/forest.webp', icon: '♣', detail: 'TIMBER' },
+  { name: 'Pasture', color: '#a6b77d', image: 'assets/pasture.jpg', icon: '♧', detail: 'WOOL' },
+  { name: 'Fields', color: '#d4bc67', image: 'assets/fields.webp', icon: '✺', detail: 'GRAIN' },
+  { name: 'Hills', color: '#bd795b', image: 'assets/hills.jpg', icon: '▲', detail: 'BRICK' },
+  { name: 'Mountains', color: '#778a8d', image: 'assets/mountains.webp', icon: '◆', detail: 'ORE' },
+  { name: 'Desert', color: '#d4b889', image: 'assets/desert.jpg', icon: '', detail: 'DESERT' },
 ];
 const portTypes = ['3:1', '♣', '3:1', '♧', '3:1', '✺'];
 const numbers = [2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12];
@@ -44,14 +44,12 @@ function hexPoints(x, y, size) {
 }
 function makeTile(resource, number, x, y, size) {
   const g = el('g', { class: 'tile', 'data-resource': resource.name });
-  el('polygon', { points: hexPoints(x, y, size), fill: resource.color, stroke: '#e5d8a4', 'stroke-width': 2.2, 'stroke-linejoin': 'round' }, g);
-  el('polygon', { points: hexPoints(x, y, size - 5), fill: 'none', stroke: '#ffffff30', 'stroke-width': 1 }, g);
+  el('image', { href: resource.image, x: x - size, y: y - size * Math.sqrt(3) / 2, width: size * 2, height: size * Math.sqrt(3), preserveAspectRatio: 'xMidYMid slice', 'clip-path': 'url(#hex-clip)' }, g);
+  el('polygon', { points: hexPoints(x, y, size - 1), fill: 'none', stroke: '#fff4', 'stroke-width': 1.5, 'stroke-linejoin': 'round' }, g);
   const cx = x, cy = y;
   if (resource.name === 'Desert') {
-    text(g, '✦', { x: cx, y: cy + 4, 'text-anchor': 'middle', fill: '#9a704d', 'font-size': 34, opacity: .72 });
-    text(g, 'DESERT', { x: cx, y: y + 24, 'text-anchor': 'middle', fill: '#705d47', 'font-size': 8, 'font-family': 'DM Sans, sans-serif', 'font-weight': 700, 'letter-spacing': 1.7 });
-    el('circle', { cx, cy: y + 48, r: 10, fill: '#8e473c', stroke: '#ead8b0', 'stroke-width': 1.5 }, g);
-    text(g, '♟', { x: cx, y: y + 52, 'text-anchor': 'middle', fill: '#f5e7c8', 'font-size': 14 });
+    el('circle', { cx, cy: y + 13, r: 12, fill: '#8e473c', stroke: '#ead8b0', 'stroke-width': 1.5, opacity: .94 }, g);
+    text(g, '♟', { x: cx, y: y + 18, 'text-anchor': 'middle', fill: '#f5e7c8', 'font-size': 16 });
   } else {
     text(g, resource.icon, { x: cx, y: cy - 24, 'text-anchor': 'middle', fill: '#18373b', 'font-size': 21, opacity: .86 });
     text(g, resource.detail, { x: cx, y: y - 8, 'text-anchor': 'middle', fill: '#213a37', 'font-size': 7, 'font-family': 'DM Sans, sans-serif', 'font-weight': 700, 'letter-spacing': 1.25, opacity: .82 });
@@ -74,6 +72,8 @@ function randomResources() {
 function renderMap(resourcesSet, nums, portValues, isFinal = false) {
   svg.replaceChildren();
   const defs = el('defs');
+  const clip = el('clipPath', { id: 'hex-clip', clipPathUnits: 'objectBoundingBox' }, defs);
+  el('polygon', { points: '0.25,0 0.75,0 1,0.5 0.75,1 0.25,1 0,0.5' }, clip);
   const pattern = el('pattern', { id: 'sea-lines', width: 22, height: 22, patternUnits: 'userSpaceOnUse' }, defs);
   el('path', { d: 'M0 11 Q5 7 11 11 T22 11', fill: 'none', stroke: '#b4c9b833', 'stroke-width': .8 }, pattern);
   // Broad, quiet ocean medallion and a hand-drawn island shoreline.
